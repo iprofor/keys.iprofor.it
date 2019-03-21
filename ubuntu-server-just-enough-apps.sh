@@ -123,6 +123,8 @@ echo 'Acquire::ForceIPv4 "true";' | tee /etc/apt/apt.conf.d/99force-ipv4
 ## Updating/upgrading
 up;
 
+echo updating/upgrading ...;
+
 
 ## Checking if the vital apps are already installed
 # The list of the apps
@@ -168,7 +170,7 @@ bckup $sshdc;
 echo "Configuring SSHD Daemon ..." >> $rlog
 
 # Disabling SSH password authentication, Switching default SSH port to $sshp && changing LoginGraceTime to 24h (1440m) && enabling #Banner /etc/issue.net
-sed -i -re 's/^(ChallengeResponseAuthentication)([[:space:]]+)yes/\1\2'no'/' -e 's/^(\#)(PasswordAuthentication)([[:space:]]+)(.*)/\2\3\4/' -e 's/^(PasswordAuthentication)([[:space:]]+)yes/\1\2'no'/' -e 's/^(Port)([[:space:]]+)22/\1\2'$sshp'/' -e 's/^(LoginGraceTime)([[:space:]]+)120/\1\2'$sshlgt'/' -e 's/^(\#)(Banner)([[:space:]]+)(.*)/\2\3\4/'$sshdc;
+sed -i -re 's/^(ChallengeResponseAuthentication)([[:space:]]+)yes/\1\2'no'/' -e 's/^(\#)(PasswordAuthentication)([[:space:]]+)(.*)/\2\3\4/' -e 's/^(PasswordAuthentication)([[:space:]]+)yes/\1\2'no'/' -e 's/^(Port)([[:space:]]+)22/\1\2'$sshp'/' -e 's/^(LoginGraceTime)([[:space:]]+)120/\1\2'$sshlgt'/' -e 's/^(\#)(Banner)([[:space:]]+)(.*)/\2\3\4/' $sshdc;
 
 service ssh restart
 
@@ -181,7 +183,8 @@ unat50=/etc/apt/apt.conf.d/50unattended-upgrades;
 unat10=/etc/apt/apt.conf.d/10periodic;
 
 # Cheking the existence of the $unat20, $unat50, $unat10 configuration files
-if [[ -f $unat20 ]] && [[ -f $unat50 ]] && [[ -f $unat10 ]]; then
+if [[ -f $unat50 ]] && [[ -f $unat10 ]]; then
+# if [[ -f $unat20 ]] && [[ -f $unat50 ]] && [[ -f $unat10 ]]; then
 
   for i in $unat20 $unat50 $unat10; do
     bckup $i && mv $i*."$bckp" ~;
